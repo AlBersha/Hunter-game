@@ -49,24 +49,17 @@ public class Animal : MonoBehaviour
 
         void ApplySteeringForce()
         {
-            var provider = GetComponent<DesiredVelocityProvider>();
-            if (provider == null)
+            var providers = GetComponents<DesiredVelocityProvider>();
+            var steering = Vector3.zero;
+            foreach (var provider in providers)
             {
-                return;
+                var desiredVelocity = provider.GetDesiredVelocity() * provider.Weight;
+                steering += desiredVelocity - velocity;
+                        
             }
+            ApplyForce(Vector3.ClampMagnitude(steering - velocity, steeringForceLimit));
 
-            var desiredVelocity = provider.GetDesiredVelocity();
-            var steeringForce = desiredVelocity - velocity;
-            
-            ApplyForce(steeringForce.normalized * steeringForceLimit);
-            // var steering = Vector3.zero;
-            // foreach (var provider in providers)
-            // {
-            //     var desiredVelocity = provider.GetDesiredVelocity() * provider.Weight; //
-            //     steering += desiredVelocity - velocity;
-            //         
-            // }
-            // ApplyForce(Vector3.ClampMagnitude(steering - velocity, steeringForceLimit));
+            // ApplyForce(steeringForce.normalized * steeringForceLimit);
         }
 
         void ApplyForces()
@@ -77,14 +70,14 @@ public class Animal : MonoBehaviour
         
             //on small values object might start to blink, so we considering 
             //small velocities as zeroes
-            // if (velocity.magnitude < Epsilon)
-            // {
-            //     velocity = Vector3.zero;
-            //     return;
-            // }
+            if (velocity.magnitude < Epsilon)
+            {
+                velocity = Vector3.zero;
+                return;
+            }
         
             transform.position += velocity * Time.deltaTime;
-            // acceleration = Vector3.zero;
+            acceleration = Vector3.zero;
             // transform.rotation = Quaternion.LookRotation(velocity);
         }
     }
