@@ -6,21 +6,22 @@ using UnityEngine;
 namespace Behavior_Scripts
 {
     [Serializable]
-    public class Cohesion : Behavior
+    public class Cohesion : TargetOrientedBehavior
     {
-        public Cohesion(BehaviorConfig config) : base(config) { }
+        public Cohesion(BehaviorConfig config, BehaviorAgent agent)
+            : base(config, agent) { }
+        
+        private Vector3 GetCenterOfMass(List<BehaviorAgent> detectedEntities)
+        {
+            return detectedEntities.Aggregate(Vector3.zero, (current, entity) => current + entity.transform.position) / detectedEntities.Count;
+        }
+
         public override Vector3 CalculateDesiredVelocity(Dictionary<EntityManager.EntityType, List<BehaviorAgent>> detectedEntities)
         {
             if (detectedEntities[config.targetType].Count == 0)
                 return Vector3.zero;
 
-            var cohesionMove = detectedEntities[config.targetType].Aggregate(Vector3.zero, (current, item) => current + item.transform.position);
-            cohesionMove /= detectedEntities[config.targetType].Count;
-
-            //offset from agent position
-            cohesionMove -= config.agent.transform.position;
-
-            return cohesionMove;
+            return GetCenterOfMass(detectedEntities[config.targetType]) - agent.transform.position;
         }
     }
 }

@@ -45,14 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityType: 1
-  maxSpeed: 1.95
-  behavior:
-    config:
-      type: 1
-      agent: {fileID: 0}
-      targetType: 0
-      weight: 20
-  detectRadius: 50
 --- !u!1 &5061282387680878697
 GameObject:
   m_ObjectHideFlags: 0

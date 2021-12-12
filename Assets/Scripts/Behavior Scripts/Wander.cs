@@ -1,36 +1,23 @@
-using System.Collections;
+using Behavior_Scripts;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wander : Behavior
+public class Wander : TargetOrientedBehavior
 {
-    public Wander(BehaviorConfig config) : base(config) { }
-    [SerializeField, Range(0.5f, 5)]
+    public Wander(BehaviorConfig config, BehaviorAgent agent) : base(config, agent) { }
     private float circleDistance = 1;
-
-    [SerializeField, Range(0.5f, 5)]
     private float circleRadius = 2;
-
-    [SerializeField, Range(1, 80)]
-    private int angleChangeStep = 15;
-
-    private int angle = 0;
+    private int angleChangeStep = 30;
 
     public override Vector3 CalculateDesiredVelocity(Dictionary<EntityManager.EntityType, List<BehaviorAgent>> detectedEntities)
     {
-        var rnd = Random.value;
-        if (rnd < 0.5)
-        {
-            angle += angleChangeStep;
-        }
-        else if (rnd < 1)
-        {
-            angle -= angleChangeStep;
-        }
+        float rand = Random.value;
+        int randomAngle = (int)(rand * angleChangeStep);
+        float angle = rand >= 0.5f ? agent.Angle + randomAngle : agent.Angle - randomAngle;
 
-        var futurePos = config.agent.transform.position + config.agent.transform.up * circleDistance;
-        var vector = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * circleRadius;
+        var futurePos = agent.transform.position + agent.Velocity * circleDistance;
+        var vector = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad), 0) * circleRadius;
 
-        return (futurePos + vector - config.agent.transform.position).normalized * config.agent.MaxSpeed;
+        return (futurePos + vector - agent.transform.position) * agent.MaxSpeed;
     }
 }
