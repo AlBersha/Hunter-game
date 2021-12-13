@@ -16,7 +16,7 @@ public class BehaviorAgent : MonoBehaviour
     public Vector3 Velocity { set; get; }
     public Vector3 Rotation { set; get; }
     public float Angle { set; get; }
-    public int Health { private set; get; }
+    public int Health { set; get; }
 
     protected void RotateTo(Vector3 target)
     {
@@ -31,14 +31,19 @@ public class BehaviorAgent : MonoBehaviour
         Velocity = target;
     }
 
-    public virtual void Attack(BehaviorAgent agent) { }
+    public virtual void Attack(BehaviorAgent agent)
+    {
+        Debug.Log(name + " attacked " + agent.name);
+    }
+
     public void TakeDamage(int damage)
     {
         Health -= damage;
     }
+
     public bool IsAlive() => Health > 0;
 
-    public void Move(Vector3 velocity, Vector3 direction)
+    public virtual void Move(Vector3 velocity, Vector3 direction)
     {
         MoveTo(velocity);
         RotateTo(direction);

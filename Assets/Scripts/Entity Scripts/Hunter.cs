@@ -9,5 +9,14 @@ public class Hunter : BehaviorAgent
 
     public override void Attack(BehaviorAgent target)
     {
+        base.Attack(target);
+
+        if (ammoAmount > 0)
+        {
+            target.TakeDamage(damageAmount);
+            ammoAmount--;
+        }
+        else
+            Debug.Log("Not enough ammo!");
     }
 }

@@ -9,6 +9,7 @@ public class EntityManager : MonoBehaviour
     public class SpawnConfig
     {
         public EntityType entityType;
+        public BehaviorAgent agent;
         public List<Behavior.BehaviorConfig> behaviorConfigs = new List<Behavior.BehaviorConfig>();
         public int entitiesAmount;
         public int minNeighbourRadius;
@@ -32,7 +33,7 @@ public class EntityManager : MonoBehaviour
     [NonSerialized]
     public const int z_position = 0;
 
-    private Dictionary<EntityType, List<BehaviorAgent>> GetEntitiesInDetectRadius(BehaviorAgent currentEntity)
+    public Dictionary<EntityType, List<BehaviorAgent>> GetEntitiesInDetectRadius(BehaviorAgent currentEntity)
     {
         Dictionary<EntityType, List<BehaviorAgent>> resultingDictionary = new Dictionary<EntityType, List<BehaviorAgent>>
         {
@@ -59,6 +60,9 @@ public class EntityManager : MonoBehaviour
                 resultingDictionary[entity.entityType].Add(entity);
         }
 
+        if (currentEntity == hunter)
+            return resultingDictionary;
+
         directionToTarget = hunter.transform.position - currentPosition;
         if (directionToTarget.sqrMagnitude < currentEntity.SqrDetectRadius)
             resultingDictionary[EntityType.Hunter].Add(hunter);
@@ -70,21 +74,26 @@ public class EntityManager : MonoBehaviour
     {
         for (int i = 0; i < config.entitiesAmount; i++)
         {
-            var entity = EntityFactory.GetEntity(config, config.entityType.ToString() + i);
-
             var agent = Instantiate(
-                entity,
+                config.agent,
                 GetRandomSpawnPosition(),
                 Quaternion.Euler(Vector3.forward * UnityEngine.Random.Range(0f, 360f)),
                 transform
             );
+
+            agent.name = config.entityType.ToString() + i;
+            agent.MaxSpeed = config.speed;
+            agent.Health = 15;
+            agent.DetectRadius = config.detectRadius;
+
+            agent.behavior = BehaviorFactory.CreateComplexBehavior(config.behaviorConfigs, agent);
             _entities.Add(agent);
         }
 
         Vector3 GetRandomSpawnPosition()
         {
             Vector2 planeSpawnPosition = UnityEngine.Random.insideUnitCircle * config.minNeighbourRadius;
-            
+
             Vector3 spawnPosition;
             spawnPosition.x = planeSpawnPosition.x;
             spawnPosition.y = planeSpawnPosition.y;
@@ -119,21 +128,56 @@ public class EntityManager : MonoBehaviour
 
                 entity.Move(move, move);
 
+                CheckPossibleAttackTargets(entity, detectedNearbyEntities);
+
                 if (HasFallenOfTheLand(entity.transform.position) || !entity.IsAlive())
                     _deadEntities.Add(entity);
             }
         }
+    }
 
-        void ProcessDeadEntities()
+    private void CheckPossibleAttackTargets(BehaviorAgent currentEntity, Dictionary<EntityType, List<BehaviorAgent>> detectedNearbyEntities)
+    {
+        const int hitRadius = 10;
+
+        if (currentEntity.entityType == EntityType.Wolf)
         {
-            foreach (BehaviorAgent deadEntity in _deadEntities)
+            foreach (var dictElement in detectedNearbyEntities)
             {
-                _entities.Remove(deadEntity);
-                Destroy(deadEntity);
+                foreach (var entity in dictElement.Value)
+                {
+                    if (IsEntityHit(currentEntity, entity))
+                    {
+                        currentEntity.Attack(entity);
+                        return;
+                    }
+                }
             }
-
-            _deadEntities.Clear();
         }
+
+        bool IsEntityHit(BehaviorAgent currentEntity, BehaviorAgent targetEntity)
+        {
+            var targetEntityPosition = targetEntity.transform.position;
+            var currentEntityPosition = currentEntity.transform.position;
+            if (currentEntityPosition.x >= targetEntityPosition.x - hitRadius
+                && currentEntityPosition.x <= targetEntityPosition.x + hitRadius
+                && currentEntityPosition.y >= targetEntityPosition.y - hitRadius
+                && currentEntityPosition.y <= targetEntityPosition.y + hitRadius)
+                return true;
+            return false;
+        }
+    }
+
+
+    private void ProcessDeadEntities()
+    {
+        foreach (BehaviorAgent deadEntity in _deadEntities)
+        {
+            _entities.Remove(deadEntity);
+            Destroy(deadEntity);
+        }
+
+        _deadEntities.Clear();
     }
 
     private bool HasFallenOfTheLand(Vector3 entityPosition)

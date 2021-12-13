@@ -13,6 +13,7 @@ namespace Behavior_Scripts
                 config = new BehaviorConfig();
                 config.weight = 5f;
             }
+
             public override Vector3 CalculateDesiredVelocity(Dictionary<EntityManager.EntityType, List<BehaviorAgent>> detectedEntities)
             {
                 var maxSpeed = agent.MaxSpeed;

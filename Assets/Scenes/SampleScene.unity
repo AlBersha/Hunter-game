@@ -166,7 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134313eb7871fdf47a4468be6b1d4587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hunter: {fileID: -268921210681462688, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}
+  hunter: {fileID: 227785680231547341, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}
+  attackTarget: {fileID: 0}
+  entityManager: {fileID: 1774468582}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,17 +304,17 @@ MonoBehaviour:
       weight: 0.84
     - type: 1
       targetType: 0
-      weight: 0.5
+      weight: 0.37
     - type: 1
       targetType: 3
-      weight: 0.5
-    entitiesAmount: 10
-    minNeighbourRadius: 20
+      weight: 0.22
+    entitiesAmount: 20
+    minNeighbourRadius: 100
     detectRadius: 150
     speed: 3
     rotationSpeed: 0
   - entityType: 0
-    agent: {fileID: 9200395990967405759, guid: b4b801dc7d72c7b43a590b88116ee788, type: 3}
+    agent: {fileID: -4410032630731471468, guid: b4b801dc7d72c7b43a590b88116ee788, type: 3}
     behaviorConfigs:
     - type: 3
       targetType: 0
@@ -320,9 +322,32 @@ MonoBehaviour:
     - type: 0
       targetType: 2
       weight: 0.63
-    entitiesAmount: 1
-    minNeighbourRadius: 100
+    - type: 0
+      targetType: 3
+      weight: 0.63
+    entitiesAmount: 3
+    minNeighbourRadius: 50
     detectRadius: 70
     speed: 4
     rotationSpeed: 0
-  hunter: {fileID: -268921210681462688, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}
+  - entityType: 1
+    agent: {fileID: 726519104173766156, guid: 178400d822928664188b1aad4c9666ae, type: 3}
+    behaviorConfigs:
+    - type: 3
+      targetType: 1
+      weight: 0.27
+    - type: 1
+      targetType: 2
+      weight: 0.63
+    - type: 1
+      targetType: 0
+      weight: 0.63
+    - type: 1
+      targetType: 3
+      weight: 0.63
+    entitiesAmount: 30
+    minNeighbourRadius: 80
+    detectRadius: 70
+    speed: 6
+    rotationSpeed: 0
+  hunter: {fileID: 227785680231547341, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}

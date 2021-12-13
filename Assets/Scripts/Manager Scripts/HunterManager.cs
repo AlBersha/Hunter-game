@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class HunterManager : MonoBehaviour
 {
     public BehaviorAgent hunter;
+    public BehaviorAgent attackTarget;
+    public EntityManager entityManager;
 
     void Start()
     {
@@ -24,12 +24,48 @@ public class HunterManager : MonoBehaviour
         );
 
         hunter.MaxSpeed = 3f;
+        hunter.DetectRadius = 200;
     }
 
     void FixedUpdate()
     {
         hunter.Move(GetKeyboardInput(), GetMouseInput());
-        hunter.Attack();
+
+        if (HasAttackedEntity())
+        {
+            hunter.Attack(attackTarget);
+        }
+    }
+
+    private bool HasAttackedEntity()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var entitiesDict = entityManager.GetEntitiesInDetectRadius(hunter);
+            foreach (var dictElement in entitiesDict)
+            {
+                foreach (var entity in dictElement.Value)
+                {
+                    if (IsEntityHit(entity))
+                    {
+                        attackTarget = entity;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+        bool IsEntityHit(BehaviorAgent entity)
+        {
+            var entityPosition = Camera.main.WorldToScreenPoint(entity.transform.position);
+            if (entityPosition.x >= Input.mousePosition.x - 10
+                && entityPosition.x <= Input.mousePosition.x + 10
+                && entityPosition.y >= Input.mousePosition.y - 10
+                && entityPosition.y <= Input.mousePosition.y + 10)
+                return true;
+            return false;
+        }
     }
 
     private Vector3 GetKeyboardInput()
