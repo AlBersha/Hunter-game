@@ -29,6 +29,7 @@ public class HunterManager : MonoBehaviour
 
     void FixedUpdate()
     {
+<<<<<<< HEAD
         if (hunter.IsAlive())
         {
             hunter.Move(GetKeyboardInput(), GetMouseInput());
@@ -37,6 +38,13 @@ public class HunterManager : MonoBehaviour
             {
                 hunter.Attack(attackTarget);
             }
+=======
+        hunter.Move(GetKeyboardInput(), GetMouseInput());
+
+        if (HasAttackedEntity())
+        {
+            hunter.Attack(attackTarget);
+>>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19
         }
     }
 
