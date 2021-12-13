@@ -18,13 +18,13 @@ namespace Behavior_Scripts
                 var maxSpeed = agent.MaxSpeed;
                 Vector3 pos = Camera.main.WorldToViewportPoint(agent.transform.position);
 
-                if (pos.x < 0.0)
+                if (pos.x < 0.05)
                     return new Vector3(maxSpeed, 0, 0);
-                if (1.0 < pos.x)
+                if (0.95 < pos.x)
                     return new Vector3(-maxSpeed, 0, 0);
-                if (pos.y < 0.0)
+                if (pos.y < 0.05)
                     return new Vector3(0, maxSpeed, 0);
-                if (1.0 < pos.y)
+                if (0.95 < pos.y)
                     return new Vector3(0, -maxSpeed, 0);
 
                 return agent.Velocity;

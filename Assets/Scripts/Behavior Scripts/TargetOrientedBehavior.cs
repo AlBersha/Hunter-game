@@ -9,7 +9,8 @@ namespace Behavior_Scripts
 {
     public abstract class TargetOrientedBehavior : Behavior
     {
-        protected TargetOrientedBehavior(BehaviorConfig config, BehaviorAgent agent) : base(agent)
+        protected TargetOrientedBehavior(BehaviorConfig config, BehaviorAgent agent)
+            : base(agent)
         {
             this.config = config;
         }

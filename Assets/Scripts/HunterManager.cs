@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class HunterManager : MonoBehaviour
 {
     public BehaviorAgent hunter;
+
     void Start()
     {
         Vector2 planeSpawnPosition = UnityEngine.Random.insideUnitCircle * 100;
@@ -25,10 +26,10 @@ public class HunterManager : MonoBehaviour
         hunter.MaxSpeed = 3f;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         hunter.Move(GetKeyboardInput(), GetMouseInput());
+        hunter.Attack();
     }
 
     private Vector3 GetKeyboardInput()
@@ -37,12 +38,14 @@ public class HunterManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
             movement += Vector3.up * hunter.MaxSpeed;
-        else if (Input.GetKey(KeyCode.S))
+
+        if (Input.GetKey(KeyCode.S))
             movement += Vector3.down * hunter.MaxSpeed;
 
         if (Input.GetKey(KeyCode.A))
             movement += Vector3.left * hunter.MaxSpeed;
-        else if (Input.GetKey(KeyCode.D))
+
+        if (Input.GetKey(KeyCode.D))
             movement += Vector3.right * hunter.MaxSpeed;
 
         return movement;

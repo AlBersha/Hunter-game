@@ -303,6 +303,9 @@ MonoBehaviour:
     - type: 1
       targetType: 0
       weight: 0.5
+    - type: 1
+      targetType: 3
+      weight: 0.5
     entitiesAmount: 10
     minNeighbourRadius: 20
     detectRadius: 150
@@ -318,7 +321,7 @@ MonoBehaviour:
       targetType: 2
       weight: 0.63
     entitiesAmount: 1
-    minNeighbourRadius: 300
+    minNeighbourRadius: 100
     detectRadius: 70
     speed: 4
     rotationSpeed: 0

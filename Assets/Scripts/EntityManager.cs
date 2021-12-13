@@ -9,7 +9,6 @@ public class EntityManager : MonoBehaviour
     public class SpawnConfig
     {
         public EntityType entityType;
-        public BehaviorAgent agent;
         public List<Behavior.BehaviorConfig> behaviorConfigs = new List<Behavior.BehaviorConfig>();
         public int entitiesAmount;
         public int minNeighbourRadius;
@@ -27,6 +26,7 @@ public class EntityManager : MonoBehaviour
     [SerializeField]
     public List<SpawnConfig> spawnConfigs = new List<SpawnConfig>();
     private List<BehaviorAgent> _entities = new List<BehaviorAgent>();
+    private List<BehaviorAgent> _deadEntities = new List<BehaviorAgent>();
     [SerializeField]
     public BehaviorAgent hunter;
     [NonSerialized]
@@ -68,28 +68,30 @@ public class EntityManager : MonoBehaviour
 
     private void Spawn(SpawnConfig config)
     {
-        Vector2 planeSpawnPosition;
-        Vector3 spawnPosition = Vector3.zero;
         for (int i = 0; i < config.entitiesAmount; i++)
         {
-            planeSpawnPosition = UnityEngine.Random.insideUnitCircle * config.minNeighbourRadius;
+            var entity = EntityFactory.GetEntity(config, config.entityType.ToString() + i);
+
+            var agent = Instantiate(
+                entity,
+                GetRandomSpawnPosition(),
+                Quaternion.Euler(Vector3.forward * UnityEngine.Random.Range(0f, 360f)),
+                transform
+            );
+            _entities.Add(agent);
+        }
+
+        Vector3 GetRandomSpawnPosition()
+        {
+            Vector2 planeSpawnPosition = UnityEngine.Random.insideUnitCircle * config.minNeighbourRadius;
+            
+            Vector3 spawnPosition;
             spawnPosition.x = planeSpawnPosition.x;
             spawnPosition.y = planeSpawnPosition.y;
             spawnPosition.z = z_position;
 
-            var agent = Instantiate(
-                config.agent,
-                spawnPosition,
-                Quaternion.Euler(Vector3.forward * UnityEngine.Random.Range(0f, 360f)),
-                transform
-            );
 
-            agent.name = config.entityType.ToString() + i;
-            agent.MaxSpeed = config.speed;
-            agent.DetectRadius = config.detectRadius;
-
-            agent.behavior = BehaviorFactory.CreateComplexBehavior(config.behaviorConfigs, agent);
-            _entities.Add(agent);
+            return spawnPosition;
         }
     }
 
@@ -99,17 +101,47 @@ public class EntityManager : MonoBehaviour
             Spawn(config);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        foreach (BehaviorAgent entity in _entities)
+        ProcessMovement();
+
+        ProcessDeadEntities();
+
+        void ProcessMovement()
         {
-            var detectedNearbyEntities = GetEntitiesInDetectRadius(entity);
+            foreach (BehaviorAgent entity in _entities)
+            {
+                var detectedNearbyEntities = GetEntitiesInDetectRadius(entity);
 
-            Vector3 move = entity.behavior.CalculateDesiredVelocity(detectedNearbyEntities);
-            move *= entity.MaxSpeed;
-            move.z = z_position;
+                Vector3 move = entity.behavior.CalculateDesiredVelocity(detectedNearbyEntities);
+                move *= entity.MaxSpeed;
+                move.z = z_position;
 
-            entity.Move(move, move);
+                entity.Move(move, move);
+
+                if (HasFallenOfTheLand(entity.transform.position) || !entity.IsAlive())
+                    _deadEntities.Add(entity);
+            }
         }
+
+        void ProcessDeadEntities()
+        {
+            foreach (BehaviorAgent deadEntity in _deadEntities)
+            {
+                _entities.Remove(deadEntity);
+                Destroy(deadEntity);
+            }
+
+            _deadEntities.Clear();
+        }
+    }
+
+    private bool HasFallenOfTheLand(Vector3 entityPosition)
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(entityPosition);
+        return (pos.x < 0.0
+            || 1.0 < pos.x
+            || pos.y < 0.0
+            || 1.0 < pos.y);
     }
 }
