@@ -29,7 +29,8 @@ public class EntityManager : MonoBehaviour
     private List<BehaviorAgent> _entities = new List<BehaviorAgent>();
     [SerializeField]
     public BehaviorAgent hunter;
-    const int z_position = 0;
+    [NonSerialized]
+    public const int z_position = 0;
 
     private Dictionary<EntityType, List<BehaviorAgent>> GetEntitiesInDetectRadius(BehaviorAgent currentEntity)
     {
@@ -108,7 +109,7 @@ public class EntityManager : MonoBehaviour
             move *= entity.MaxSpeed;
             move.z = z_position;
 
-            entity.Move(move);
+            entity.Move(move, move);
         }
     }
 }
