@@ -166,7 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134313eb7871fdf47a4468be6b1d4587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hunter: {fileID: 227785680231547341, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}
   attackTarget: {fileID: 0}
   entityManager: {fileID: 1774468582}
 --- !u!1 &519420028
@@ -274,11 +273,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19
 --- !u!114 &1774468582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,42 +291,22 @@ MonoBehaviour:
     behaviorConfigs:
     - type: 3
       targetType: 2
-<<<<<<< HEAD
-      weight: 0.11
-    - type: 0
-      targetType: 2
-      weight: 1
-=======
       weight: 0.1
     - type: 0
       targetType: 2
-      weight: 0.76
->>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19
+      weight: 0.78
     - type: 1
       targetType: 2
-      weight: 0.005
+      weight: 0.01
     - type: 2
       targetType: 2
-<<<<<<< HEAD
-      weight: 0.72
+      weight: 0.38
     - type: 1
       targetType: 0
-      weight: 0.3
-    - type: 1
-      targetType: 3
-      weight: 0.12
-=======
-      weight: 0.84
-    - type: 1
-      targetType: 0
-      weight: 0.37
-    - type: 1
-      targetType: 3
-      weight: 0.22
->>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19
-    entitiesAmount: 20
+      weight: 0.15
+    entitiesAmount: 8
     minNeighbourRadius: 100
-    detectRadius: 150
+    detectRadius: 100
     speed: 3
     rotationSpeed: 0
   - entityType: 0
@@ -340,14 +314,14 @@ MonoBehaviour:
     behaviorConfigs:
     - type: 3
       targetType: 0
-      weight: 0.27
+      weight: 0.2
     - type: 0
       targetType: 2
       weight: 0.63
     - type: 0
       targetType: 3
       weight: 0.63
-    entitiesAmount: 3
+    entitiesAmount: 1
     minNeighbourRadius: 50
     detectRadius: 70
     speed: 4
@@ -357,7 +331,7 @@ MonoBehaviour:
     behaviorConfigs:
     - type: 3
       targetType: 1
-      weight: 0.27
+      weight: 1
     - type: 1
       targetType: 2
       weight: 0.63
@@ -373,7 +347,3 @@ MonoBehaviour:
     speed: 6
     rotationSpeed: 0
   hunter: {fileID: 227785680231547341, guid: 9c80e50a71757164b9a2a94a55909d8b, type: 3}
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19

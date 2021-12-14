@@ -138,7 +138,7 @@ public class EntityManager : MonoBehaviour
 
     private void CheckPossibleAttackTargets(BehaviorAgent currentEntity, Dictionary<EntityType, List<BehaviorAgent>> detectedNearbyEntities)
     {
-        const int hitRadius = 10;
+        const int hitRadius = 5;
 
         if (currentEntity.entityType == EntityType.Wolf)
         {

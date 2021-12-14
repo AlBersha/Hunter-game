@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class HunterManager : MonoBehaviour
 {
-    public BehaviorAgent hunter;
     public BehaviorAgent attackTarget;
     public EntityManager entityManager;
 
@@ -16,35 +15,28 @@ public class HunterManager : MonoBehaviour
         spawnPosition.y = planeSpawnPosition.y;
         spawnPosition.z = EntityManager.z_position;
 
-        hunter = Instantiate(
-            hunter,
+        entityManager.hunter = Instantiate(
+            entityManager.hunter,
             spawnPosition,
             Quaternion.Euler(Vector3.forward * UnityEngine.Random.Range(0f, 360f)),
             transform
         );
 
-        hunter.MaxSpeed = 3f;
-        hunter.DetectRadius = 200;
+        entityManager.hunter.MaxSpeed = 3f;
+        entityManager.hunter.Health = 50;
+        entityManager.hunter.DetectRadius = 200;
     }
 
     void FixedUpdate()
     {
-<<<<<<< HEAD
-        if (hunter.IsAlive())
+        if (entityManager.hunter.IsAlive())
         {
-            hunter.Move(GetKeyboardInput(), GetMouseInput());
+            entityManager.hunter.Move(GetKeyboardInput(), GetMouseInput());
 
             if (HasAttackedEntity())
             {
-                hunter.Attack(attackTarget);
+                entityManager.hunter.Attack(attackTarget);
             }
-=======
-        hunter.Move(GetKeyboardInput(), GetMouseInput());
-
-        if (HasAttackedEntity())
-        {
-            hunter.Attack(attackTarget);
->>>>>>> aacc6cb0ddb9eda431fb00a55a095f5e3895ff19
         }
     }
 
@@ -52,7 +44,7 @@ public class HunterManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var entitiesDict = entityManager.GetEntitiesInDetectRadius(hunter);
+            var entitiesDict = entityManager.GetEntitiesInDetectRadius(entityManager.hunter);
             foreach (var dictElement in entitiesDict)
             {
                 foreach (var entity in dictElement.Value)
@@ -84,22 +76,22 @@ public class HunterManager : MonoBehaviour
         Vector3 movement = Vector3.zero;
 
         if (Input.GetKey(KeyCode.W))
-            movement += Vector3.up * hunter.MaxSpeed;
+            movement += Vector3.up * entityManager.hunter.MaxSpeed;
 
         if (Input.GetKey(KeyCode.S))
-            movement += Vector3.down * hunter.MaxSpeed;
+            movement += Vector3.down * entityManager.hunter.MaxSpeed;
 
         if (Input.GetKey(KeyCode.A))
-            movement += Vector3.left * hunter.MaxSpeed;
+            movement += Vector3.left * entityManager.hunter.MaxSpeed;
 
         if (Input.GetKey(KeyCode.D))
-            movement += Vector3.right * hunter.MaxSpeed;
+            movement += Vector3.right * entityManager.hunter.MaxSpeed;
 
         return movement;
     }
 
     private Vector3 GetMouseInput()
     {
-        return Input.mousePosition - Camera.main.WorldToScreenPoint(hunter.transform.position);
+        return Input.mousePosition - Camera.main.WorldToScreenPoint(entityManager.hunter.transform.position);
     }
 }

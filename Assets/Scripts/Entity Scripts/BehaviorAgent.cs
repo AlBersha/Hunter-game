@@ -45,7 +45,10 @@ public class BehaviorAgent : MonoBehaviour
 
     public virtual void Move(Vector3 velocity, Vector3 direction)
     {
-        MoveTo(velocity);
-        RotateTo(direction);
+        if (IsAlive())
+        {
+            MoveTo(velocity);
+            RotateTo(direction);
+        }
     }
 }
